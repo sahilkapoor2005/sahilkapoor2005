@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Contact & Camera Single Page App</title>
+  <style>
+    /* === Global Styles === */
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to top, #fdd9a0 30%, #87ceeb 80%);
+      min-height: 100vh;
+      overflow-x: hidden;
+      perspective: 1000px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: #333;
+    }
+
+    /* === Rising Sun Background === */
+    .scene {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      height: 50vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      pointer-events: none;
+      z-index: 0;
+      transform-style: preserve-3d;
+    }
+
+    .sun {
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      background: radial-gradient(circle at center, #FFD700, #FFA500, #FF8C00);
+      box-shadow: 0 0 80px 30px rgba(255, 165, 0, 0.6);
+      transform: translateZ(80px);
+      animation: rise 4s ease-out forwards;
+      position: relative;
+      z-index: 0;
+    }
+
+    .horizon {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 120px;
+      background: linear-gradient(to top, #6b4c27, transparent);
+      z-index: -1;
+    }
+
+    @keyframes rise {
+      0% {
+        transform: translateY(100px) translateZ(0) scale(0.8);
+        opacity: 0;
+      }
+      100% {
+        transform: translateY(0) translateZ(80px) scale(1);
+        opacity: 1;
+      }
+    }
+
+    /* === Header & Navigation === */
+    header {
+      width: 100%;
+      max-width: 640px;
+      margin-top: 30px;
+      z-index: 2;
+      text-align: center;
+      user-select: none;
+    }
+
+    header h1 {
+      margin-bottom: 10px;
+      text-shadow: 0 2px 3px rgba(0,0,0,0.2);
+    }
+
+    nav {
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+    }
+
+    nav button {
+      background: #007BFF;
+      border: none;
+      border-radius: 6px;
+      padding: 10px 20px;
+      font-size: 16px;
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      transition: background-color 0.3s ease;
+    }
+
+    nav button.active,
+    nav button:hover {
+      background: #0056b3;
+    }
+
+    /* === Containers for Pages === */
+    .page {
+      max-width: 640px;
+      width: 90%;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+      transform: rotateX(5deg) translateZ(20px);
+      z-index: 2;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .page.active {
+      display: flex;
+    }
+
+    /* === Contact Saver Styles === */
+    #contact input {
+      width: 90%;
+      padding: 10px 12px;
+      margin: 8px 0;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    #contact .output-buttons {
+      margin-top: 15px;
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    #contact .output-buttons button,
+    #contact .output-buttons a.button {
+      padding: 10px 15px;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      background: #007BFF;
+      color: white;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      white-space: nowrap;
+    }
+
+    #contact .output-buttons button:hover,
+    #contact .output-buttons a.button:hover {
+      background: #0056b3;
+    }
+
+    /* === Video Recorder Styles === */
+    #camera video {
+      width: 100%;
+      max-height: 360px;
+      border-radius: 10px;
+      border: 3px solid #555;
+      margin-bottom: 15px;
+    }
+
+    #camera .output-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    #camera .output-buttons button {
+      background: #007BFF;
+      border: none;
+      border-radius: 6px;
+      padding: 10px 20px;
+      font-size: 16px;
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      transition: background-color 0.3s ease;
+    }
+
+    #camera .output-buttons button:hover {
+      background: #0056b3;
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- Rising Sun Background -->
+  <div class="scene" aria-hidden="true">
+    <div class="sun"></div>
+    <div class="horizon"></div>
+  </div>
+
+  <header>
+    <h1>Contact Saver & Webcam Recorder</h1>
+    <nav>
+      <button id="tab-contact" class="active" aria-controls="contact" aria-selected="true">Contact Saver 🌅</button>
+      <button id="tab-camera" aria-controls="camera" aria-selected="false">Webcam Recorder 📹</button>
+    </nav>
+  </header>
+
+  <!-- Contact Saver Page -->
+  <section id="contact" class="page active" role="tabpanel" tabindex="0" aria-labelledby="tab-contact">
+    <input type="text" id="name" placeholder="Full Name" aria-label="Full Name" required />
+    <input type="text" id="phone" placeholder="Phone Number (e.g., +1234567890)" aria-label="Phone Number" required />
+
+    <div class="output-buttons">
+      <button id="generateBtn">Generate Contact</button>
+    </div>
+
+    <div id="actions" style="display:none;" class="output-buttons" aria-live="polite">
+      <a id="callLink" class="button" href="#" aria-label="Call Contact">📞 Call</a>
+      <a id="whatsappLink" class="button" href="#" target="_blank" rel="noopener" aria-label="Message on WhatsApp">💬 WhatsApp</a>
+      <a id="downloadLink" class="button" href="#" download aria-label="Save Contact">💾 Save Contact</a>
+    </div>
+  </section>
+
+  <!-- Webcam Recorder Page -->
+  <section id="camera" class="page" role="tabpanel" tabindex="0" aria-labelledby="tab-camera">
+    <video id="preview" autoplay playsinline muted></video>
+
+    <div class="output-buttons">
+      <button id="startRec">🎬 Start Recording</button>
+      <button id="stopRec">⏹️ Stop & Save</button>
+    </div>
+  </section>
+
+  <script>
+    // Tab switching logic
+    const tabContact = document.getElementById('tab-contact');
+    const tabCamera = document.getElementById('tab-camera');
+    const contactPage = document.getElementById('contact');
+    const cameraPage = document.getElementById('camera');
+
+    function activateTab(tab) {
+      if (tab === 'contact') {
+        tabContact.classList.add('active');
+        tabContact.setAttribute('aria-selected', 'true');
+        tabCamera.classList.remove('active');
+        tabCamera.setAttribute('aria-selected', 'false');
+
+        contactPage.classList.add('active');
+        contactPage.focus();
+        cameraPage.classList.remove('active');
+      } else {
+        tabCamera.classList.add('active');
+        tabCamera.setAttribute('aria-selected', 'true');
+        tabContact.classList.remove('active');
+        tabContact.setAttribute('aria-selected', 'false');
+
+        cameraPage.classList.add('active');
+        cameraPage.focus();
+        contactPage.classList.remove('active');
+      }
+    }
+
+    tabContact.addEventListener('click', () => activateTab('contact'));
+    tabCamera.addEventListener('click', () => activateTab('camera'));
+
+    // Contact Saver logic
+    const generateBtn = document.getElementById('generateBtn');
+    const actionsDiv = document.getElementById('actions');
+    const callLink = document.getElementById('callLink');
+    const whatsappLink = document.getElementById('whatsappLink');
+    const downloadLink = document.getElementById('downloadLink');
+
+    generateBtn.addEventListener('click', () => {
+      const name = document.getElementById('name').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+
+      if (!name || !phone) {
+        alert('Please enter both name and phone number.');
+        return;
+      }
+
+      // Clean phone number for WhatsApp URL (digits only)
+      const cleanPhone = phone.replace(/[^\d]/g, '');
+      const message = encodeURIComponent(`Hi ${name}, I got your contact.`);
+
+      // Create vCard content
+      const vcard = `BEGIN:VCARD
+VERSION:3.0
+FN:${name}
+TEL;TYPE=CELL:${phone}
+END:VCARD`;
+
+      // Encode vCard as URI
+      const vcardEncoded = encodeURIComponent(vcard);
+      const vcardURL = `data:text/vcard;charset=utf-8,${vcardEncoded}`;
+
+      // Set links
+      callLink.href = `tel:${phone}`;
+      whatsappLink.href = `https://wa.me/${cleanPhone}?text=${message}`;
+      downloadLink.href = vcardURL;
+      downloadLink.download = `${name.replace(/\s+/g, '_')}.vcf`;
+
+      // Show action buttons
+      actionsDiv.style.display = 'flex';
+    });
+
+    // Webcam Recorder logic
+    let mediaRecorder;
+    let recordedChunks = [];
+    const preview = document.getElementById('preview');
+    const startRecBtn = document.getElementById('startRec');
+    const stopRecBtn = document.getElementById('stopRec');
+
+    async function setupCamera() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+        preview.srcObject = stream;
+        mediaRecorder = new MediaRecorder(stream);
+
+        mediaRecorder.ondataavailable = e => {
+          if (e.data.size > 0) recordedChunks.push(e.data);
+        };
+
+        mediaRecorder.onstop = () => {
+          const blob = new Blob(recordedChunks, { type: 'video/webm' });
+          const url = URL.createObjectURL(blob);
+
+          const a = document.createElement('a');
+          a.style.display = 'none';
+          a.href = url;
+          a.download = 'recorded-video.webm';
+          document.body.appendChild(a);
+          a.click();
+
+          setTimeout(() => {
+            URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+            recordedChunks = [];
+          }, 100);
+        };
+      } catch (err) {
+        alert('Camera or microphone access denied or unavailable.');
+        console.error(err);
+      }
+    }
+
+    startRecBtn.addEventListener('click', () => {
+      if (mediaRecorder && mediaRecorder.state === 'inactive') {
+        mediaRecorder.start();
+        alert('Recording started...');
+      }
+    });
+
+    stopRecBtn.addEventListener('click', () => {
+      if (mediaRecorder && mediaRecorder.state === 'recording') {
+        mediaRecorder.stop();
+        alert('Recording stopped. Downloading video...');
+      }
+    });
+
+    // Initialize camera only when user switches to Camera tab
+    tabCamera.addEventListener('click', () => {
+      if (!mediaRecorder) {
+        setupCamera();
+      }
+    });
+
+    // For accessibility: load camera if camera tab is active initially (optional)
+    if (tabCamera.classList.contains('active')) {
+      setupCamera();
+    }
+
+  </script>
+</body>
+</html>

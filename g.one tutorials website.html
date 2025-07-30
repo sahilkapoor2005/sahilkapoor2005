@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>G-One Tutorials</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #000435;}
+        header { background: #333; color: #FFFFFF; padding: 15px; text-align: center; }
+        nav { text-align: center; margin: 20px; }
+        nav a { margin: 0 15px; text-decoration: none; color: #FFFFFF; font-size: 20px; }
+        .container { max-width: 800px; margin: auto; padding: 20px; background: #000435;color:white; }
+        footer { background: #333; color: white; text-align: center; padding: 10px; margin-top: 20px; }
+form { background: rgba(255, 255, 255, 0.9); padding: 20px; border-radius: 5px; color:black;}
+        input, textarea { width: 100%; padding: 10px; margin: 5px 0; border: 2px solid #ccc; border-radius: 5px; }
+        button {.email-button background: #GRAY; color: BLACK; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer;mailto:"gonetutorials23@gmail.com"; }
+    </style>
+</head>
+<body>
+    <header>
+<img src="C:\Users\HP\Desktop\DOCUMENT\g-one logo.jpg"align="center"height="400"width="400"></img>
+        <h1>G-One Tutorials</h1>
+        <p>Empowering Students with Quality Education</p>
+    </header>
+    <nav>
+        <a href="#home">Home</a>
+        <a href="#about">About</a>
+        <a href="#admission">Admission</a>
+        <a href="#contact">Contact</a>
+    </nav>
+    <div class="container" id="home">
+        <h2 align="center">Welcome to G-One Tutorials</h2>
+        <p align="center">Your trusted platform  for learning and growth.</p><br>
+        <p align="center"> 100% Result of Passing. </p><br> 
+    </div>
+    <div class="container" id="about">
+        <h2>About Us</h2>
+        <p>G-One Tutorials is dedicated to providing top-notch education to students<br>
+           . Our mission is to educate and empower learners.<br>
+          .  Best Professor With Experience<br>
+          . Regular Test Series and Pre Exam Preparation<br>
+           . Regular Reporting to the Parents<br>
+           . Separate Batch For Maths & Science<br>
+          . Complete Coverage Cf Syllabus Before Completion Date<br>
+          . Special Classes For Weak Students<br>
+          . Smart Leaming Through Audio Visual Mode<br>
+          . Extensive Preparation<br> </p>
+    </div>
+    <div class="container" id="courses">
+        <h2>Admission Open for</h2>
+        <p> Std  1st-5th <br>
+                Std  5th- 10th(Private also Acceptable )<br>
+                Std 11th-12th (Commerce [With  Maths & IT/Without Maths & I T])<br></p>
+<img src="C:\Users\HP\Desktop\DOCUMENT\g-one.jpg"float="right"</img>
+    </div>
+<div class="container" id="form">
+        <h2>Enquirey Form</h2>
+        <form action="send_email.php" method="post">
+            <label for="name">Full Name:</label><br>
+            <input type="text" id="name" name="name" required><br>
+            <label for="email">Email:</label><br>
+            <input type="email" id="email" name="email" required><br>
+            <label for="phone">Phone Number:</label><br>
+            <input type="tel" id="phone" name="phone" required><br>
+            <label for="course">Std Interested In:</label><br>
+            <input type="text" id="course" name="course" required><br>           
+            <label for="message">Additional Information:</label><br>
+            <textarea id="message" name="message" rows="4"></textarea><br>   
+            <button type="submit">>Submit</button><br>
+<script type="text/javascript"
+        src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js">
+</script>
+<script type="text/javascript">
+   (function(){
+      emailjs.init({
+        publicKey: "uTP7UHY5OVU5RI1Km",
+      });
+   })();
+</script>
+        </form>
+    <div class="container" id="contact">
+        <h2>Contact Us</h2>
+        <p>Email: gonetutorials23@.com</p>
+        <p>Phone: +91 9930796603/7718079716</p>
+       <address>Shop No 4, St Lawrence Compound , Near Ramdev plaza, opp Kashigoan School , Kashimira, Mira-road(E),Thane-401107.</address>
+    </div>
+    <footer>
+        <p>&copy; 2025 G-One Tutorials. All rights reserved.</p>
+    </footer>
+</body>
+</html>
